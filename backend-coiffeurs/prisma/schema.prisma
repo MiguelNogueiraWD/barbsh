@@ -1,0 +1,230 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriptionType {
+  FREE
+  PRO
+  VIP
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name     String?
+  role     Role   @default(CLIENT)
+  subscribed Boolean @default(false) // pour la newsletter
+  createdAt DateTime @default(now())
+  services Service[] //  relation inverse
+  bookings    Booking[] // réservations faites en tant que client
+  sentMessages     Message[] @relation("Sender")
+  receivedMessages Message[] @relation("Receiver")
+  payments   Payment[]
+  reviews   Review[]
+  availabilities Availability[]
+  specificAvailabilities SpecificAvailability[]
+  reportsFiled    Report[] @relation("ReporterUser")
+  reportsReceived Report[] @relation("ReportedUser")
+  isActive Boolean @default(true)
+  posts  Post[]
+  orders Order[]
+  avatarUrl String?
+  gallery  GalleryImage[]
+  subscribedToNewsletter Boolean @default(false) // champ qui a été ajouté
+  latitude  Float?
+  longitude Float?
+  subscriptionType SubscriptionType @default(FREE)
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  duration    Int
+  location    Location
+  coiffeur    User     @relation(fields: [coiffeurId], references: [id])
+  coiffeurId  Int
+  city String @default("Inconnu")  // Ville ou zone
+  zipcode     String?  // Optionnel
+  latitude    Float?   // Pour plus tard : géolocalisation
+  longitude   Float?
+  createdAt   DateTime @default(now())
+  bookings    Booking[] // réservations associées à ce service
+  reviews   Review[]
+  lat         Float?
+  lng         Float?
+}
+
+enum Role {
+  CLIENT
+  COIFFEUR
+  MODERATEUR
+  ADMIN
+}
+
+enum Location {
+  SALON
+  DOMICILE
+  LES_DEUX
+}
+
+model Booking {
+  id          Int      @id @default(autoincrement())
+  service     Service  @relation(fields: [serviceId], references: [id])
+  serviceId   Int
+  client      User     @relation(fields: [clientId], references: [id])
+  clientId    Int
+  date        DateTime
+  status      BookingStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  payment    Payment?
+}
+
+enum BookingStatus {
+  PENDING
+  VALIDATED
+  REFUSED
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  from       User     @relation("Sender", fields: [fromId], references: [id])
+  fromId     Int
+  to         User     @relation("Receiver", fields: [toId], references: [id])
+  toId       Int
+  content    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Payment {
+  id            Int       @id @default(autoincrement())
+  amount        Float                 // Montant total payé
+  platformFee   Float                 // Commission plateforme (15%)
+  coiffeurShare Float                 // Ce que reçoit le coiffeur (85%)
+  client        User      @relation(fields: [clientId], references: [id])
+  clientId      Int
+  booking       Booking   @relation(fields: [bookingId], references: [id])
+  bookingId     Int @unique
+  createdAt     DateTime  @default(now())
+  status        String
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  rating     Int      // entre 1 et 5
+  comment    String?
+  createdAt  DateTime @default(now())
+  client     User     @relation(fields: [clientId], references: [id])
+  clientId   Int
+  service    Service  @relation(fields: [serviceId], references: [id])
+  serviceId  Int
+}
+
+model Availability {
+  id         Int      @id @default(autoincrement())
+  dayOfWeek  Int      // 0 = dimanche, 1 = lundi, ..., 6 = samedi
+  startTime  String   // Heure au format "HH:MM"
+  endTime    String
+  coiffeur   User     @relation(fields: [coiffeurId], references: [id])
+  coiffeurId Int
+  createdAt  DateTime @default(now())
+}
+
+model SpecificAvailability {
+  id         Int      @id @default(autoincrement())
+  date       DateTime // date exacte : 2025-07-01T10:00:00Z
+  startTime  String   // ex: "10:00"
+  endTime    String   // ex: "13:00"
+  coiffeur   User     @relation(fields: [coiffeurId], references: [id])
+  coiffeurId Int
+  createdAt  DateTime @default(now())
+}
+
+model Report {
+  id          Int      @id @default(autoincrement())
+  reason      String
+  createdAt   DateTime @default(now())
+  reported    User     @relation("ReportedUser", fields: [reportedId], references: [id])
+  reportedId  Int
+  reporter    User     @relation("ReporterUser", fields: [reporterId], references: [id])
+  reporterId  Int
+  status      ReportStatus @default(PENDING)
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  BLOCKED
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  imageUrl  String?  // facultatif
+  createdAt DateTime @default(now())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  orderItems OrderItem[]
+}
+
+model Order {
+  id         Int       @id @default(autoincrement())
+  client     User      @relation(fields: [clientId], references: [id])
+  clientId   Int
+  createdAt  DateTime  @default(now())
+  total      Float
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
+}
+
+model GalleryImage {
+  id         Int      @id @default(autoincrement())
+  imageUrl   String
+  createdAt  DateTime @default(now())
+  coiffeur   User     @relation(fields: [coiffeurId], references: [id])
+  coiffeurId Int
+  url        String
+}
+
+model NewsletterLog {
+  id           Int      @id @default(autoincrement())
+  email        String
+  subject      String
+  status       String
+  errorMessage String?      //
+  retryCount   Int     @default(0)
+  sentAt       DateTime @default(now())
+}
+
