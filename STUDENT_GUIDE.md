@@ -168,16 +168,22 @@ Remplacez Nodemailer par SendGrid dans `backend-coiffeurs/utils/email.js` :
 ```javascript
 const sgMail = require('@sendgrid/mail');
 
-// Vérifier que la clé API est configurée
-if (!process.env.SENDGRID_API_KEY) {
-  console.error('SENDGRID_API_KEY is not set in environment variables');
-} else {
+// Initialiser SendGrid avec validation
+function initializeSendGrid() {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error('SENDGRID_API_KEY is not set in environment variables');
+    return false;
+  }
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  return true;
 }
 
+// Initialiser au démarrage
+const sendGridInitialized = initializeSendGrid();
+
 async function sendEmail(to, subject, html) {
-  if (!process.env.SENDGRID_API_KEY) {
-    console.error('Cannot send email: SENDGRID_API_KEY not configured');
+  if (!sendGridInitialized) {
+    console.error('Cannot send email: SendGrid not properly initialized');
     return;
   }
   
@@ -190,9 +196,9 @@ async function sendEmail(to, subject, html) {
   
   try {
     await sgMail.send(msg);
-    console.log('Email sent to', to);
+    console.log(`Email sent successfully to ${to} with subject: "${subject}"`);
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error(`Error sending email to ${to} with subject "${subject}":`, error.message);
     if (error.response) {
       console.error('SendGrid error details:', error.response.body);
     }
