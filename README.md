@@ -1,6 +1,21 @@
 # 💈 Barbsh - Plateforme de Réservation pour Coiffeurs et Barbiers
 
+[![GitHub Student Pack](https://img.shields.io/badge/GitHub-Student%20Pack-blue?logo=github)](https://education.github.com/pack)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-19-blue?logo=react)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql)](https://www.postgresql.org/)
+[![Stripe](https://img.shields.io/badge/Stripe-Payments-purple?logo=stripe)](https://stripe.com/)
+
 Plateforme moderne de réservation en ligne pour coiffeurs et barbiers avec système de paiement, marketplace, et gestion complète des rendez-vous.
+
+> 🎓 **Projet étudiant ?** Consultez le [Guide Étudiant](./STUDENT_GUIDE.md) pour déployer gratuitement avec le GitHub Student Developer Pack !
+
+## 📖 Documentation
+
+- 📚 **[Guide de Démarrage Rapide](./QUICKSTART.md)** - Lancez le projet en 10 minutes
+- 🎓 **[Guide Étudiant avec GitHub Pack](./STUDENT_GUIDE.md)** - Déployez gratuitement
+- 🔧 **[Documentation Backend](./backend-coiffeurs/README.md)** - API et architecture
+- 🎨 **[Documentation Frontend](./client-barbsh/README.md)** - Interface utilisateur
 
 ## 📋 Description du Projet
 
@@ -253,9 +268,11 @@ heroku config:set JWT_SECRET="votre_secret"
 
 ## 📚 Documentation Détaillée
 
-- **Backend** : Voir [backend-coiffeurs/README.md](./backend-coiffeurs/README.md)
-- **Frontend** : Voir [client-barbsh/README.md](./client-barbsh/README.md)
-- **API Docs** : `http://localhost:3000/docs` (Swagger)
+- **[Démarrage Rapide](./QUICKSTART.md)** : Guide d'installation en 10 minutes
+- **[Guide Étudiant](./STUDENT_GUIDE.md)** : Configuration avec GitHub Student Pack
+- **[Backend API](./backend-coiffeurs/README.md)** : Documentation technique du backend
+- **[Frontend](./client-barbsh/README.md)** : Documentation de l'interface utilisateur
+- **API Swagger** : `http://localhost:3000/docs` (documentation interactive)
 
 ## 🤝 Contribution
 
