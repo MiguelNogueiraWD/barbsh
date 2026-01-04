@@ -167,9 +167,20 @@ Remplacez Nodemailer par SendGrid dans `backend-coiffeurs/utils/email.js` :
 
 ```javascript
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Vérifier que la clé API est configurée
+if (!process.env.SENDGRID_API_KEY) {
+  console.error('SENDGRID_API_KEY is not set in environment variables');
+} else {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 async function sendEmail(to, subject, html) {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.error('Cannot send email: SENDGRID_API_KEY not configured');
+    return;
+  }
+  
   const msg = {
     to,
     from: process.env.MAIL_FROM,
@@ -182,6 +193,9 @@ async function sendEmail(to, subject, html) {
     console.log('Email sent to', to);
   } catch (error) {
     console.error('Error sending email:', error);
+    if (error.response) {
+      console.error('SendGrid error details:', error.response.body);
+    }
   }
 }
 
@@ -462,8 +476,13 @@ Utilisez cette checklist pour vous assurer que tout est configuré :
 
 ### "SendGrid not sending emails"
 - Vérifiez que votre email est vérifié dans SendGrid
-- Vérifiez que la clé API a les bonnes permissions
-- Regardez les logs SendGrid dans le dashboard
+- **Important** : Vérifiez l'authentification de l'expéditeur (Sender Authentication)
+  - Allez dans SendGrid > Settings > Sender Authentication
+  - Option A : Vérifiez un domaine complet (recommandé pour la production)
+  - Option B : Vérifiez une adresse email unique (plus rapide pour les tests)
+- Vérifiez que la clé API a les bonnes permissions (Full Access ou Mail Send)
+- Regardez les logs SendGrid dans le dashboard pour voir les erreurs détaillées
+- Testez avec l'Activity Feed dans SendGrid pour voir si les emails sont envoyés
 
 ### "Build failed on deployment"
 - Vérifiez que toutes les dépendances sont dans `package.json`
