@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="8" fill="url(#grad)"/>
+  <!-- scissors icon -->
+  <g stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- blade top -->
+    <path d="M22 8L12 18"/>
+    <circle cx="10" cy="20" r="2.5" fill="none"/>
+    <!-- blade bottom -->
+    <path d="M22 24L12 14"/>
+    <circle cx="10" cy="12" r="2.5" fill="none"/>
+    <!-- pivot -->
+    <circle cx="16" cy="16" r="1" fill="white" stroke="none"/>
+  </g>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#FF6B9D"/>
+    </linearGradient>
+  </defs>
+</svg>

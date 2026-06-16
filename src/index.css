@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #FAFAF8;
+    color: #1C1C3A;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold px-6 py-3 rounded-xl 
+           hover:bg-primary-600 active:scale-95 transition-all duration-200 
+           shadow-card hover:shadow-violet-glow;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary font-semibold px-6 py-3 rounded-xl 
+           border-2 border-primary hover:bg-primary hover:text-white 
+           active:scale-95 transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply text-muted font-medium px-4 py-2 rounded-xl 
+           hover:bg-primary-50 hover:text-primary transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-card p-6;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-border bg-white 
+           text-dark placeholder-muted focus:outline-none focus:ring-2 
+           focus:ring-primary-200 focus:border-primary transition-all duration-200;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+
+  .section-title {
+    @apply font-display text-3xl md:text-4xl font-bold text-dark leading-tight;
+  }
+
+  .badge-violet {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
+           bg-primary-50 text-primary-600 text-sm font-medium;
+  }
+
+  .badge-pink {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
+           bg-accent-50 text-accent-600 text-sm font-medium;
+  }
+
+  .badge-gold {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full 
+           bg-amber-50 text-amber-600 text-sm font-medium;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #7C5CFC 0%, #FF6B9D 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-gradient {
+    border: 2px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, #7C5CFC, #FF6B9D) border-box;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Leaflet map overrides */
+.leaflet-container {
+  border-radius: 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 40px rgba(124, 92, 252, 0.15);
+}
+
+/* Custom scrollbar for large screens */
+@media (min-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F3F0FF;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBC0FF;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7C5CFC;
+  }
+}
